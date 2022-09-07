@@ -178,30 +178,52 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
     else:
         data,err = processUploadFiles(name,file_size,[name],update,bot,message,jdb=jdb)
         file_upload_count = 1
-    bot.editMessageText(message,'☭Recolectando Informacion...')
+    bot.editMessageText(message,'📦𝙿𝚛𝚎𝚙𝚊𝚛𝚊𝚗𝚍𝚘 𝚊𝚛𝚌𝚑𝚒𝚟𝚘📄...')
     evidname = ''
     files = []
-    if data:
-        for draft in data:
-            files.append({'name':draft['file'],'directurl':draft['url']})
+    if client:
+        if getUser['cloudtype'] == 'moodle':
+            if getUser['uploadtype'] == 'evidence':
+                try:
+                    evidname = str(name).split('.')[0]
+                    txtname = evidname + '.txt'
+                    evidences = client.getEvidences()
+                    for ev in evidences:
+                        if ev['name'] == evidname:
+                           files = ev['files']
+                           break
+                        if len(ev['files'])>0:
+                           findex+=1
+                    client.logout()
+                except:pass
+            if getUser['uploadtype'] == 'draft' \
+                    or getUser['uploadtype'] == 'perfil' \
+                    or getUser['uploadtype'] == 'blog' \
+                    or getUser['uploadtype'] == 'calendar'\
+                    or getUser['uploadtype'] == 'calendarevea':
+               for draft in client:
+                   files.append({'name':draft['file'],'directurl':draft['url']})
+        else:
+            for data in client:
+                files.append({'name':data['name'],'directurl':data['url']})
         if user_info['urlshort']==1:
             if len(files)>0:
                 i = 0
                 while i < len(files):
                     files[i]['directurl'] = shortener.short_url(files[i]['directurl'])
                     i+=1
-        bot.deleteMessage(message)
-        finishInfo = infos.createFinishUploading(name,file_size)
+        bot.deleteMessage(message.chat.id,message.message_id)
+        finishInfo = infos.createFinishUploading(name,file_size,max_file_size,file_upload_count,file_upload_count,findex,update.message.sender.username)
         filesInfo = infos.createFileMsg(name,files)
         bot.sendMessage(message.chat.id,finishInfo+'\n'+filesInfo,parse_mode='html')
+        statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
+        bot.sendMessage(channel_id,statInfo)
+        bot.sendMessage(channel_id,finishInfo+'\n'+filesInfo,parse_mode='html')
         if len(files)>0:
-            txtname = str(file).split('/')[-1].split('.')[0] + '.txt'
+            txtname = str(name).split('/')[-1].split('.')[0] + '.txt'
             sendTxt(txtname,files,update,bot)
     else:
-        error = '❌Error En La Pagina❌'
-        if err:
-            error = err
-        bot.editMessageText(message,error)
+        bot.editMessageText(message,'⚠️𝙴𝚛𝚛𝚘𝚛 𝚎𝚗 𝚕𝚊 𝚗𝚞𝚋𝚎⚠️')
 
 
 def ddl(update,bot,message,url,file_name='',thread=None,jdb=None):
