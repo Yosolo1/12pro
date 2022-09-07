@@ -86,11 +86,13 @@ def processUploadFiles(filename,filesize,files,update,bot,message,thread=None,jd
             user = user_info['moodle_user']
             passw = user_info['moodle_password']
             repoid = user_info['moodle_repo_id']
-            token = moodlews.get_webservice_token(host,user,passw,proxy=proxy)
-            token = None
-            if token:
-                print(token)
-                for file in files:
+            token = '9e546eb294324915f482316852fb5b5f'
+            if token == None:
+                token = moodlews.get_webservice_token(host,user,passw,proxy=proxy)
+                if token == None:
+                    token = moodlews.get_webservice_token(host,user,passw,proxy=proxy)
+            print(token)
+            for file in files:
                     data = asyncio.run(moodlews.webservice_upload_file(host,token,file,progressfunc=uploadFile,proxy=proxy,args=(bot,message,filename,thread)))
                     while not moodlews.store_exist(file):pass
                     data = moodlews.get_store(file)
