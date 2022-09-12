@@ -37,6 +37,7 @@ class JsonDatabase(object):
                      'zips': 100,
                      'uploadtype':'calendar',
                      'proxy':'',
+                     'path':'/',
                      'tokenize':0,
                      'rename':0,
                      'urlshort':0}
@@ -52,6 +53,7 @@ class JsonDatabase(object):
                      'zips': 240,
                      'uploadtype':'calendar',
                      'proxy':'',
+                     'path':'/',
                      'tokenize':0,
                      'rename':0,
                      'urlshort':0}
