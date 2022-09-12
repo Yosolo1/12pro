@@ -33,6 +33,7 @@ from moodle_client import MoodleClient
 import S5Crypto
 import handlers.Root as Root
 import handlers.Linux as Linux
+from MessageDispatcher import MessageDispatcher
 
 listproxy = []
 
