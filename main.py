@@ -31,6 +31,8 @@ import moodlews
 import moodle_client
 from moodle_client import MoodleClient
 import S5Crypto
+import handlers.Root as Root
+import handlers.Linux as Linux
 
 listproxy = []
 
@@ -822,6 +824,15 @@ def main():
     bot.onCallbackData('/maketxt ', maketxt)
     bot.onCallbackData('/deleteproxy ',deleteproxy)
     bot.onCallbackData('/convert2calendar ',convert2calendar)
+    dispatcher.reg(['/root','open_root'],Root.handle)
+    dispatcher.reg('del_root',Root.delete)
+    #regs Linux
+    dispatcher.reg(['/ls'],Linux.ls)
+    dispatcher.reg(['/cd'],Linux.cd)
+    dispatcher.reg(['/rm'],Linux.rm)
+    dispatcher.reg(['/seven'],Linux.zip)
+    #regs Upload
+    dispatcher.reg(['/up'],Uploader.upload)
     bot.run()
 
 if __name__ == '__main__':
