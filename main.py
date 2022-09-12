@@ -66,6 +66,15 @@ def uploadFile(filename,currentBits,totalBits,speed,time,args):
         message = args[1]
         originalfile = args[2]
         thread = args[3]
+        path = user_data['path']
+        if index!=-1:
+             if path=='/':
+                 path = 'root'
+             list = os.listdir(path)
+             if path[-1]!='/':
+                 path+='/'
+
+             item = path + list[index]
         downloadingInfo = infos.createUploading(filename,totalBits,currentBits,speed,time,originalfile)
         bot.editMessageText(message,downloadingInfo)
     except Exception as ex: print(str(ex))
